@@ -1,0 +1,32 @@
+<view class="cu-chat1" id="j">
+<view class="cu-chat"  wx:for="{{txt}}" wx:key="key">
+  <view class="cu-item self"   wx:if='{{item.speaker=="user"}}'>
+    <view class="main" >
+      <view class="content bg-green shadow" >
+        <text>{{item.content}}</text>
+        <image wx:if='{{item.img!=""}}' style="width: 200px; height: 200px; background-color: #eeeeee;"  mode="{{item.mode}}" src="{{item.img}}" ></image>
+      </view>
+    </view>
+    <view  class="cu-avatar radius" style="background-image:url();  " ></view>
+  </view>
+
+
+  <view class="cu-item"  wx:else>
+    <view class="cu-avatar radius" style="background-image:url();"></view>
+    <view class="main" >
+      <view class="content shadow">
+        <text>{{item.content}}</text>
+        <image wx:if='{{item.img!=""}}' style="width: 200px; height: 200px; background-color: #eeeeee;"   src="{{item.img}}" ></image>
+      </view>
+    </view>
+  </view>
+</view>
+</view>
+<view class="cu-bar foot input {{InputBottom!=0?'cur':''}}" style="height:30px">
+  <input class="solid-bottom" bindfocus="InputFocus" bindblur="InputBlur" adjust-position="{{true}}" cursor-spacing="10" focus="{{false}}" 
+  maxlength="300"  placeholder="输入内容" value="{{use}}" bindinput='userInput'  ></input>
+  <view class="action">
+    <text class="cuIcon-emojifill text-grey" bindtap="emoj"></text>
+  </view>
+  <button class="cu-btn bg-green shadow" bindtap='send'>发送</button>
+</view>

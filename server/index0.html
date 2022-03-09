@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>聊天客服</title>
+    <link rel="stylesheet" href="index0.css">
+</head>
+<body>
+    
+    <div id="enter">
+        <div class="input0">
+            用户：
+            <input type="text" name="user" id="inputI">
+            <br />
+            密码：
+            <input type="password" name="password" id="inputId">
+            <br>
+            <button id="enterId">登录</button>
+            <button id="enterId">注册</button>
+            <span>需要登录获得客服权限</span>
+        </div>
+    </div>
+<div class="zz">
+
+    <div class="people">
+        <div class="title"><b>用户列表</b></div>
+        <div id="user"></div>
+    </div>
+    
+    <div class="chat">
+        <div class="top">
+            ⊙ <b> 聊天窗口 </b> ⊙
+        </div>
+        <div class="content">
+            <div class="contentlist">
+                <div class="new" id="new1">
+                </div>
+            </div>
+        </div>
+        <div class="input">
+            <div class="text">
+                <textarea class="Shuru_input" id="text"></textarea>
+            </div>
+            <div class="button">
+                <input type="file" id="file" style="display: none;">
+                <img src="./img/tupian.png" class="img1" id="img" alt="" onclick="sendimg()">
+                <img src="./img/fasong.png" class="img2" alt="" id="send">
+            </div>
+        </div>
+    </div>
+</div>
+    <script src="index0.js"></script>
+</body>
+</html>

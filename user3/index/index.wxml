@@ -1,0 +1,18 @@
+<!--index.wxml-->
+
+ 
+  <!-- <view class="usermotto">
+     <button bindtap="chat"></button>
+  </view> -->
+
+<view class="container" class="zn-uploadimg" > 
+<button type="primary" bindtap="modalinput">
+{{message}}
+</button> 
+</view>
+
+<modal hidden="{{hiddenmodalput}}" title="请昵称" confirm-text="提交" cancel-text="取消" bindcancel="off" bindconfirm="chat"> 
+ <input type='text' placeholder="请输入内容" auto-focus    value="{{name}}" bindinput='nameInput'   />
+</modal>
+
+

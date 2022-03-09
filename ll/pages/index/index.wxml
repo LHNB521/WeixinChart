@@ -1,0 +1,9 @@
+<block wx:if="{{item.is_show_right ==1}}">
+        <view class='my_right'>
+          <view class='page_row'>
+            <text wx:if='{{!item.is_img}}' class='new_txt'>{{item.content}}</text>
+            <view wx:if='{{!item.is_img}}' class='sanjiao my'></view>
+          
+          </view>
+        </view>
+      </block>

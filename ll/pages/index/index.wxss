@@ -1,0 +1,31 @@
+
+/* 聊天 */
+ 
+.my_right {
+  float: right;
+  position: relative;
+  right: 40rpx;
+}
+ 
+
+ 
+.new_txt {
+  width: 380rpx;
+  border-radius: 7px;
+  background-color: #95d4ff;
+  padding: 0rpx 30rpx 0rpx 30rpx;
+}
+ 
+.sanjiao {
+  top: 20rpx;
+  position: relative;
+  width: 0px;
+  height: 0px;
+  border-width: 10px;
+  border-style: solid;
+}
+ 
+.my {
+  border-color: transparent transparent transparent #95d4ff;
+}
+ 

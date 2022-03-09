@@ -1,0 +1,14 @@
+.pag {
+  width: 100%;
+  height: 90%;
+
+}
+
+.cu-chat{
+  display: flex;
+  flex-direction: column;
+
+}
+.cu-chat1{
+  margin-bottom: 40px;
+}

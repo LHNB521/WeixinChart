@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>客服在线</title>
+    <script type="text/javascript" src="socket.io-1.3.7.js"></script>
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <center>
+        <h1>聊天客服</h1>
+    </center>
+    <hr>
+    <div>
+        <div id="enter" style="display: none;">
+            <div class="input">
+                用户：
+                <input type="text" name="user" id="inputI">
+                <br />
+                密码：
+                <input type="password" name="password" id="inputId" >
+                <br>
+                <button id="enterId">登录</button>
+                <button id="enterId">注册</button>
+                <span>需要登录获得客服权限</span>
+            </div>
+        </div>
+        <div id="shuru">
+            <input type="text" id="sendTxt" placeholder="输入内容">
+            <div class="people" id="people1">
+                当前在线：<span id="span"></span>人
+            </div>
+            <br/>
+            <div style="float: left;">
+                <input type="file" id="tupian" >
+                 <button id="img" onclick="sendimg()">添加图片</button> 
+                <button id="send">发送</button>
+            </div>
+
+        </div>
+
+        <div id="chat">
+            
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+        var username = [];
+        var server = [];
+        var aa = 0;
+        var people = 0;
+        var socket = io("ws://localhost:3000");//监听端口
+        let imgdata;
+
+    let sendimg = () => {
+            let Imginput = document.getElementById('tupian');
+            let file = Imginput.files[0];       //得到该图片
+            if(file==undefined){
+                alert("你都没有选择图片，点个鸡儿...")
+            }else{
+                let reader = new FileReader();      //创建一个FileReader对象，进行下一步的操作
+                reader.readAsDataURL(file);              //通过readAsDataURL读取图片
+                reader.onload = function () {            //读取完毕会自动触发，读取结果保存在result中
+                    var imgdata1 = { img: this.result };
+                    imgdata = imgdata1.img
+                    //console.log(imgdata)
+                    alert("添加成功...")
+                }
+            }
+
+           
+    };
+
+
+        //点击发送引发事件（send）
+
+        document.getElementById('send').onclick = function () {
+            var txt = {
+                'userid': username[0],
+                'body': document.getElementById('sendTxt').value,
+                'img':imgdata
+            }
+            
+            console.log(txt);
+            document.getElementById('sendTxt').value = "";
+            imgdata="";
+            if (txt.body && txt.userid || txt.img) {              //当不为空发送消息
+                socket.emit('message1', txt);
+            } else {
+                alert('输入为空或者没有用户在线');
+            }
+        }
+        socket.on('message3', function (data) {                 //广播用户=上线
+            // var d = "用户：" + data + "【已连接】";
+            // //showMessage(d, 'message3');
+            username.push(data)
+            //  people=data; 
+            // showpeople(people);                  
+        })
+        
+        //广播用户=上线
+        socket.on('people', function (data) {                 
+            // var d = "用户：" + data + "【已连接】";
+            // //showMessage(d, 'message3');
+            // username.push(data)
+            people = data;
+            showpeople(people);
+        })
+
+        //广播客服=上线
+        socket.on('connect', function (data) {                   
+            socket.emit('kfenter', '客服');
+            socket.on('ed', function (data) {  
+                username.concat(data)
+                people = username.length;
+                showpeople(people);
+            })
+
+        })
+
+
+        //欢迎客服显示
+        socket.on('message22', function (data) {
+            showMessage2(data, 'message22');
+        })
+
+        //在页面显示用户的话
+        socket.on('message11', function (data) {                 
+            var n = data.nameid + ": " + data.body+data.img;
+            //console.log(n)
+            showMessage1(data, 'message11');
+        })
+
+        //在页面显示客服的话
+        socket.on('message1', function (data) {                  
+            var n = "客服: " + data.body;
+            //  showMessage(n, 'message1');
+            showMessage(data, 'message1');
+        })
+
+        socket.on('aa', function (data) {
+            aa = data;
+        })
+
+        //广播下线
+        socket.on('left', function (data) {                    
+            console.log(data)
+            if (data == "客服") {
+
+            } else {
+                for (var j = 0; j < username.length; j++) {
+                    if (username[j] == data) {
+                        for (var k = j; k < username.length; k++) {
+                            if (username[k + 1]) {
+                                username[k] = username[k + 1];
+                            } else {
+                                username[k] = {};
+                                username.pop();
+                            }
+
+                        }
+
+                    }
+                }
+                people--;
+                showpeople(people);
+            }
+            dat = data + "下线"
+            //showMessage(dat, 'left');
+
+        })
+
+
+        function showpeople(x) {
+            var span = document.getElementById('span');
+            if(x<=0){
+                x=0;
+            }
+            span.innerHTML = x
+        }
+
+        /**
+         * 欢迎客服渲染到页面上
+         */
+        function showMessage2(str, type) {
+            var div = document.createElement('div');//创建一个div
+            var chat = document.getElementById('chat');    
+            div.innerHTML =str 
+            if (type == "message3") {
+                div.style.color = "blue";         //上线蓝色 
+            } else if (type == "left") {
+                div.style.color = "red";        //下线红色
+            }
+            chat.appendChild(div);//在chat中显示这个div
+        }
+        /**
+         * 消息客服渲染到页面上
+         */
+        function showMessage(str, type) {
+            var div = document.createElement('div');//创建一个div
+            var chat = document.getElementById('chat');
+            var img=str.img
+            //console.log(img)
+            if(img==1){
+                div.innerHTML ="客服说："+str.body; 
+            }else{
+                div.innerHTML ="客服说："+str.body+`<img src="${img}" style="width:400px;height:px;display:block">`;
+            }      
+             
+            if (type == "message3") {
+                div.style.color = "blue";         //上线蓝色 
+            } else if (type == "left") {
+                div.style.color = "red";        //下线红色
+            }
+            chat.appendChild(div);//在chat中显示这个div
+        }
+        /**
+         * 用户消息渲染到页面上
+         */
+        function showMessage1(str, type){
+            var div = document.createElement('div');//创建一个div
+            var chat = document.getElementById('chat');
+            var img=str.img
+            div.innerHTML =str.nameid+"说："+str.body+`<img src="${img}" style="width:400px;height:px;display:block">`;  
+            if (type == "message3") {
+                div.style.color = "blue";         //上线蓝色 
+            } else if (type == "left") {
+                div.style.color = "red";        //下线红色
+            }
+            chat.appendChild(div);//在chat中显示这个div
+        }
+
+        /**
+         * 客服登录验证
+         * 账号123
+         * 密码123
+         */
+        var enterId = document.getElementById('enterId');
+        var enter = document.getElementById('enter');
+        var password = 123;
+        var zhanghao = 123;
+        enterId.onclick = function () {
+            var inputTxt = document.getElementById('inputId').value;   //获取输入值
+            var inputT = document.getElementById('inputI').value;
+            if (aa == 1) {
+                alert("有客服啦！");
+            } else {
+                if (inputTxt == password && inputT == zhanghao) {
+                    enter.style.display = 'none'
+                } else {
+                    alert("输入账号或密码错入，请从新输入")
+                }
+            }
+
+        }
+
+
+    //     socket.on('receiveImg', (data) => {
+    //     let ImgDIV = document.createElement('div');
+    //     ImgDIV.innerHTML = `<div>: <img src="${img.img}" /></div>`;
+    //     chat.appendChild(ImgDIV);
+    // })
+
+    </script>
+</body>
+
+
+</html>
